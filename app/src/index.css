@@ -157,10 +157,10 @@ button {
   0%,
   100% {
     transform: translateY(0);
-    opacity: 0.85;
+    opacity: 0.9;
   }
   50% {
-    transform: translateY(-4px);
+    transform: translateY(-10px);
     opacity: 1;
   }
 }

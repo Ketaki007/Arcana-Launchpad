@@ -12,7 +12,6 @@ import {
   SquareArrowOutUpRight,
   Home,
   Monitor,
-  ArrowUp,
 } from 'lucide-react'
 import { openLaunchpadTab } from '../lib/launchpadWindow'
 import { getDemoScenario, setDemoScenario } from '../lib/demoScenario'
@@ -257,17 +256,25 @@ export function TopBar() {
 
           {showLaunchpadHint ? (
             <div
-              className="launchpad-hint pointer-events-none absolute left-1/2 top-full z-40 mt-2 flex -translate-x-1/2 flex-col items-center gap-0.5"
+              className="launchpad-hint pointer-events-none absolute left-1/2 top-full z-40 mt-1 -translate-x-1/2"
               aria-hidden
             >
-              <ArrowUp
-                size={16}
-                strokeWidth={2.25}
-                className="text-selection"
-              />
-              <span className="whitespace-nowrap rounded-[2px] border border-border bg-panel px-1.5 py-0.5 text-[10px] font-medium text-text-secondary shadow-[0_4px_12px_rgba(0,0,0,0.35)]">
-                Open Launchpad
-              </span>
+              {/* Tall thin cue: long shaft, light stroke */}
+              <svg
+                width="36"
+                height="120"
+                viewBox="0 0 36 120"
+                fill="none"
+                className="text-[#d946ef] drop-shadow-[0_0_10px_rgba(217,70,239,0.85)]"
+              >
+                <path
+                  d="M18 118 V22 M10 30 L18 14 L26 30"
+                  stroke="currentColor"
+                  strokeWidth="1.75"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
             </div>
           ) : null}
 
