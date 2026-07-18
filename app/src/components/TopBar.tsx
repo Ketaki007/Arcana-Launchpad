@@ -12,6 +12,7 @@ import {
   SquareArrowOutUpRight,
   Home,
   Monitor,
+  ArrowUp,
 } from 'lucide-react'
 import { openLaunchpadTab } from '../lib/launchpadWindow'
 import { getDemoScenario, setDemoScenario } from '../lib/demoScenario'
@@ -30,6 +31,16 @@ type ViewContextMenu = {
   y: number
 }
 
+const LAUNCHPAD_HINT_KEY = 'arcana-launchpad-hint-dismissed'
+
+function readLaunchpadHintDismissed(): boolean {
+  try {
+    return localStorage.getItem(LAUNCHPAD_HINT_KEY) === '1'
+  } catch {
+    return false
+  }
+}
+
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
   [
     'inline-flex items-center gap-1.5 h-7 px-2 text-[12px] text-text-secondary hover:text-text transition-colors',
@@ -42,6 +53,8 @@ export function TopBar() {
   const demo = searchParams.get('demo')
   const scenarioParam = searchParams.get('scenario')
   const forceLaunchpadMenu = demo === 'launchpad-menu'
+  /** Hide discovery cue during scripted Figma captures */
+  const suppressHint = Boolean(demo)
 
   const [scenario, setScenario] = useState<LaunchpadScenario>(() => {
     if (scenarioParam === 'returning' || scenarioParam === 'first-time') {
@@ -52,9 +65,22 @@ export function TopBar() {
   const [homeViewId, setHomeViewIdState] = useState(() => getHomeViewId())
   const [menuOpen, setMenuOpen] = useState(forceLaunchpadMenu)
   const [contextMenu, setContextMenu] = useState<ViewContextMenu | null>(null)
+  const [showLaunchpadHint, setShowLaunchpadHint] = useState(
+    () => !suppressHint && !readLaunchpadHintDismissed(),
+  )
   const closeTimer = useRef<number | null>(null)
   const contextMenuRef = useRef<HTMLDivElement>(null)
   const showViewsMenu = scenario === 'returning' || forceLaunchpadMenu
+
+  function dismissLaunchpadHint() {
+    if (!showLaunchpadHint) return
+    setShowLaunchpadHint(false)
+    try {
+      localStorage.setItem(LAUNCHPAD_HINT_KEY, '1')
+    } catch {
+      /* ignore */
+    }
+  }
 
   useEffect(() => {
     if (scenarioParam === 'returning' || scenarioParam === 'first-time') {
@@ -204,12 +230,18 @@ export function TopBar() {
 
         <div
           className="relative"
-          onMouseEnter={openMenu}
+          onMouseEnter={() => {
+            dismissLaunchpadHint()
+            openMenu()
+          }}
           onMouseLeave={scheduleCloseMenu}
         >
           <button
             type="button"
-            onClick={() => openLaunchpadTab()}
+            onClick={() => {
+              dismissLaunchpadHint()
+              openLaunchpadTab()
+            }}
             className="inline-flex h-7 items-center gap-1.5 border-b-2 border-transparent px-2 text-[12px] text-text-secondary transition-colors hover:text-text"
             aria-haspopup={showViewsMenu ? 'menu' : undefined}
             aria-expanded={showViewsMenu ? menuOpen : undefined}
@@ -222,6 +254,22 @@ export function TopBar() {
               className="text-text-muted"
             />
           </button>
+
+          {showLaunchpadHint ? (
+            <div
+              className="launchpad-hint pointer-events-none absolute left-1/2 top-full z-40 mt-2 flex -translate-x-1/2 flex-col items-center gap-0.5"
+              aria-hidden
+            >
+              <ArrowUp
+                size={16}
+                strokeWidth={2.25}
+                className="text-selection"
+              />
+              <span className="whitespace-nowrap rounded-[2px] border border-border bg-panel px-1.5 py-0.5 text-[10px] font-medium text-text-secondary shadow-[0_4px_12px_rgba(0,0,0,0.35)]">
+                Open Launchpad
+              </span>
+            </div>
+          ) : null}
 
           {showViewsMenu && menuOpen && (
             <div

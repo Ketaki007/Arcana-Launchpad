@@ -151,3 +151,27 @@ button {
 .catchup-badge {
   animation: catchup-badge-pulse 1.8s ease-in-out infinite;
 }
+
+/* First-visit Launchpad discovery cue — subtle upward nudge */
+@keyframes launchpad-hint-nudge {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.85;
+  }
+  50% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+.launchpad-hint {
+  animation: launchpad-hint-nudge 1.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .launchpad-hint {
+    animation: none;
+    opacity: 1;
+  }
+}
