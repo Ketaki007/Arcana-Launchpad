@@ -49,7 +49,8 @@ export function openLaunchpadTab(
     params.set('screen', String(opts.screen))
   }
 
-  const url = `/launchpad?${params.toString()}`
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '')
+  const url = `${base}/launchpad?${params.toString()}`
   const tabName = opts.screen
     ? `${LAUNCHPAD_TAB_NAME}-screen-${opts.screen}`
     : LAUNCHPAD_TAB_NAME
