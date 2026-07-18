@@ -18,6 +18,7 @@ import {
   Monitor,
 } from 'lucide-react'
 import { openLaunchpadTab } from '../lib/launchpadWindow'
+import { getDemoScenario } from '../lib/demoScenario'
 import {
   getHomeViewId,
   setHomeViewId,
@@ -80,7 +81,9 @@ import {
 } from '../lib/widgetSnap'
 
 function readScenario(params: URLSearchParams): LaunchpadScenario {
-  return params.get('scenario') === 'returning' ? 'returning' : 'first-time'
+  const raw = params.get('scenario')
+  if (raw === 'returning' || raw === 'first-time') return raw
+  return getDemoScenario()
 }
 
 function readViewKey(params: URLSearchParams): ReturningDemoViewKey | null {

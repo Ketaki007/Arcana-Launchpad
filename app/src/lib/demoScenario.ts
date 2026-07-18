@@ -9,7 +9,7 @@ export function getDemoScenario(): LaunchpadScenario {
   } catch {
     /* ignore */
   }
-  return 'first-time'
+  return 'returning'
 }
 
 export function setDemoScenario(scenario: LaunchpadScenario) {
