@@ -20,7 +20,9 @@ export type AutoLaunchSettings = {
 }
 
 const DEFAULT_AUTO_LAUNCH: AutoLaunchSettings = {
-  mode: 'on-arcana',
+  // Off by default so the demo opens on Arcana landing (discover Launchpad intentionally).
+  // Users can still enable auto-launch from Save View.
+  mode: 'off',
   time: '09:00',
   viewId: null,
 }

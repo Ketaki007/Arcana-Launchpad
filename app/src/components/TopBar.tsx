@@ -30,16 +30,6 @@ type ViewContextMenu = {
   y: number
 }
 
-const LAUNCHPAD_HINT_KEY = 'arcana-launchpad-hint-dismissed'
-
-function readLaunchpadHintDismissed(): boolean {
-  try {
-    return localStorage.getItem(LAUNCHPAD_HINT_KEY) === '1'
-  } catch {
-    return false
-  }
-}
-
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
   [
     'inline-flex items-center gap-1.5 h-7 px-2 text-[12px] text-text-secondary hover:text-text transition-colors',
@@ -64,9 +54,8 @@ export function TopBar() {
   const [homeViewId, setHomeViewIdState] = useState(() => getHomeViewId())
   const [menuOpen, setMenuOpen] = useState(forceLaunchpadMenu)
   const [contextMenu, setContextMenu] = useState<ViewContextMenu | null>(null)
-  const [showLaunchpadHint, setShowLaunchpadHint] = useState(
-    () => !suppressHint && !readLaunchpadHintDismissed(),
-  )
+  /** Session-only: returns on every reload; dismisses on hover/click until then */
+  const [showLaunchpadHint, setShowLaunchpadHint] = useState(!suppressHint)
   const closeTimer = useRef<number | null>(null)
   const contextMenuRef = useRef<HTMLDivElement>(null)
   const showViewsMenu = scenario === 'returning' || forceLaunchpadMenu
@@ -74,11 +63,6 @@ export function TopBar() {
   function dismissLaunchpadHint() {
     if (!showLaunchpadHint) return
     setShowLaunchpadHint(false)
-    try {
-      localStorage.setItem(LAUNCHPAD_HINT_KEY, '1')
-    } catch {
-      /* ignore */
-    }
   }
 
   useEffect(() => {
@@ -259,18 +243,18 @@ export function TopBar() {
               className="launchpad-hint pointer-events-none absolute left-1/2 top-full z-40 mt-1 -translate-x-1/2"
               aria-hidden
             >
-              {/* Tall thin cue: long shaft, light stroke */}
+              {/* Single continuous path so head + shaft stay connected */}
               <svg
-                width="36"
-                height="120"
-                viewBox="0 0 36 120"
+                width="28"
+                height="88"
+                viewBox="0 0 28 88"
                 fill="none"
-                className="text-[#d946ef] drop-shadow-[0_0_10px_rgba(217,70,239,0.85)]"
+                className="text-[#d946ef] drop-shadow-[0_0_8px_rgba(217,70,239,0.8)]"
               >
                 <path
-                  d="M18 118 V22 M10 30 L18 14 L26 30"
+                  d="M14 86 L14 18 M5 34 L14 12 L23 34"
                   stroke="currentColor"
-                  strokeWidth="1.75"
+                  strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />

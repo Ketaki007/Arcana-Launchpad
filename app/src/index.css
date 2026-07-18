@@ -160,7 +160,7 @@ button {
     opacity: 0.9;
   }
   50% {
-    transform: translateY(-10px);
+    transform: translateY(-6px);
     opacity: 1;
   }
 }
